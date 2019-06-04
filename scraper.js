@@ -59,19 +59,23 @@ function getMovieCast(movieId){
             const $ = cheerio.load(body);
             const directors = [];
             const writers = [];
-            $(".simpleTable tbody tr").eq(1).each((i, row) => {
+            const directorTable = $(".simpleTable").eq(0);
+            const writerTable =  $(".simpleTable").eq(1);
+            directorTable.find('tbody .name a').each((i, row) => {
                 $row = $(row);
-                const directorName = $row.find('.name a').text().trim();
+                const directorName = $row.text().trim();
                 const director =  {
                     directorName
                 };
                 directors.push(director);
             });
-            $(".simpleTable:nth-child(2) tbody tr").each((i, row) => {
+            writerTable.find('tbody .name a').each((i, row) => {
                 $row = $(row);
-                const writerName = $row.find('.name a').text().trim();
+                const writerName = $row.text().trim();
+                const writerCredit = $row.parent().parent().children('.credit').text().trim();
                 const writer =  {
-                    writerName
+                    writerName,
+                    writerCredit
                 };
                 writers.push(writer);
             });
