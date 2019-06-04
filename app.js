@@ -20,6 +20,11 @@ app.get('/movie/:movieId', (req, res, next) => {
         res.json(movieData)
     })
 });
+app.get('/cast/:movieId', (req, res, next) => {
+    scraper.getMovieCast(req.params.movieId).then(castData => {
+        res.json(castData)
+    })
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
