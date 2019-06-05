@@ -30,6 +30,7 @@ function getMovie(movieId) {
   return fetch(`${Movieurl}${movieId}`)
     .then(response => response.text())
     .then(body => {
+      const actors = [];
       const $ = cheerio.load(body);
       const title = $(".title_wrapper h1")
         .clone()
@@ -52,18 +53,45 @@ function getMovie(movieId) {
         .text()
         .trim();
       const poster = $(".poster a img").attr("src");
+      $(".cast_list tr")
+        .not(":first-child")
+        .each((i, row) => {
+          $row = $(row);
 
+          const actorName = $row
+            .find("td:not(.character):not(.ellipsis):not(.primary_photo)")
+            .text()
+            .trim();
+          const actorRole = $row
+            .find(".character")
+            .text()
+            .trim()
+            .replace(/\s\s+/g, " ");
+          const roleLink = $row.find(".character a").attr("href");
+          if (roleLink != undefined) {
+            roleId = roleLink.match(/characters\/(.*)\?/)[1];
+          } else {
+            roleId = null;
+          }
+          const actor = {
+            actorName,
+            actorRole,
+            roleId
+          };
+          actors.push(actor);
+        });
       return {
         title,
         year,
         summary,
         metaCriticScore,
         imdbRating,
-        poster
+        poster,
+        actors
       };
     });
 }
-function getMovieCast(movieId) {
+function getFullMovieCast(movieId) {
   return fetch(`${Movieurl}${movieId}/fullcredits`)
     .then(response => response.text())
     .then(body => {
@@ -140,14 +168,20 @@ function getMovieCast(movieId) {
             .text()
             .trim();
           const actorRole = $row
-            .find(".character a")
+            .find(".character")
             .text()
-            .trim();
+            .trim()
+            .replace(/\s\s+/g, " ");
           const roleLink = $row.find(".character a").attr("href");
+          if (roleLink != undefined) {
+            roleId = roleLink.match(/characters\/(.*)\?/)[1];
+          } else {
+            roleId = null;
+          }
           const actor = {
             actorName,
             actorRole,
-            roleLink
+            roleId
           };
           actors.push(actor);
         });
@@ -164,5 +198,5 @@ function getMovieCast(movieId) {
 module.exports = {
   searchMovies,
   getMovie,
-  getMovieCast
+  getFullMovieCast
 };

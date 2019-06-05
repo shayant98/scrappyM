@@ -20,7 +20,7 @@ app.get("/movie/:movieId", (req, res, next) => {
   });
 });
 app.get("/fullcast/:movieId", (req, res, next) => {
-  scraper.getMovieCast(req.params.movieId).then(castData => {
+  scraper.getFullMovieCast(req.params.movieId).then(castData => {
     res.json(castData);
   });
 });
