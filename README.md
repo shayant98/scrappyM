@@ -1,5 +1,5 @@
 # scrappyM
-IMDB movie data extractor API
+IMDB movie data scraper API.
 
 
 ## Endpoints
@@ -13,4 +13,5 @@ IMDB movie data extractor API
  - Node.Js
  - Express
  - Cheerio
+ - Node-fetch
  
