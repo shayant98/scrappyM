@@ -100,11 +100,17 @@ function getFullMovieCast(movieId) {
       const producers = [];
       const musicians = [];
       const actors = [];
+      const cinematographers = [];
+      const editors = [];
+      const casters = [];
       const $ = cheerio.load(body);
       const directorTable = $(".simpleTable").eq(0);
       const writerTable = $(".simpleTable").eq(1);
       const producersTable = $(".simpleTable").eq(2);
       const musicianTable = $(".simpleTable").eq(3);
+      const cinematographerTable = $(".simpleTable").eq(4);
+      const editorTable = $(".simpleTable").eq(5);
+      const casterTable = $(".simpleTable").eq(6);
       directorTable.find("tbody .name a").each((i, row) => {
         $row = $(row);
         const directorName = $row.text().trim();
@@ -158,6 +164,51 @@ function getFullMovieCast(movieId) {
         };
         musicians.push(musician);
       });
+      cinematographerTable.find("tbody .name a").each((i, row) => {
+        $row = $(row);
+        const cinematographerName = $row.text().trim();
+        const cinematographerCredit = $row
+          .parent()
+          .parent()
+          .children(".credit")
+          .text()
+          .trim();
+        const cinematographer = {
+          cinematographerName,
+          cinematographerCredit
+        };
+        cinematographers.push(cinematographer);
+      });
+      editorTable.find("tbody .name a").each((i, row) => {
+        $row = $(row);
+        const editorName = $row.text().trim();
+        const editorCredit = $row
+          .parent()
+          .parent()
+          .children(".credit")
+          .text()
+          .trim();
+        const editor = {
+          editorName,
+          editorCredit
+        };
+        editors.push(editor);
+      });
+      casterTable.find("tbody .name a").each((i, row) => {
+        $row = $(row);
+        const casterName = $row.text().trim();
+        const casterCredit = $row
+          .parent()
+          .parent()
+          .children(".credit")
+          .text()
+          .trim();
+        const caster = {
+          casterName,
+          casterCredit
+        };
+        casters.push(caster);
+      });
       $(".cast_list tr")
         .not(":first-child")
         .each((i, row) => {
@@ -190,7 +241,10 @@ function getFullMovieCast(movieId) {
         writers,
         producers,
         musicians,
-        actors
+        cinematographers,
+        editors,
+        actors,
+        casters
       };
     });
 }
